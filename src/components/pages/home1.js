@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import SliderCarousel from '../components/SliderCarouselsingle';
 import FeatureBox from '../components/FeatureBox';
 import CarouselCollection from '../components/CarouselCollection';
+import LoadingModal from '../components/LoadingModal';
 import ColumnNew from '../components/ColumnNew';
 import AuthorList from '../components/authorList';
 import Footer from '../components/footer';
 import { createGlobalStyle } from 'styled-components';
 import Reveal from 'react-awesome-reveal';
 import { keyframes } from "@emotion/react";
+import { getTokens, mintToken } from "../lib/NftHelper";
+import Modal from 'react-modal';
 
 const fadeInUp = keyframes`
   0% {
@@ -70,9 +73,78 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const homethree= () => (
+// const mintToken = () => false
+
+// async function mintToken() {
+  
+// 	const wallet = xrpl.Wallet.fromSeed(SECRET)
+// 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
+// 	await client.connect()
+// 	console.log("Connected to Sandbox")
+
+// 	// Note that you must convert the token URL to a hexadecimal
+// 	// value for this transaction.
+// 	// ----------------------------------------------------------
+// 	const transactionBlob = {
+// 		TransactionType: "NFTokenMint",
+// 		Account: wallet.classicAddress,
+// 		URI: xrpl.convertStringToHex(TOKEN_URL),
+// 		Flags: 8,
+// 		TokenTaxon: 0 //Required, but if you have no use for it, set to zero.
+// 	}
+// 	// Submit signed blob --------------------------------------------------------
+// 	const tx = await client.submitAndWait(transactionBlob,{wallet})
+
+// 	const nfts = await client.request({
+// 		method: "account_nfts",
+// 		account: wallet.classicAddress
+// 	})
+// 	console.log(nfts)
+
+// 	// Check transaction results -------------------------------------------------
+// 	console.log("Transaction result:", tx.result.meta.TransactionResult)
+// 	console.log("Balance changes:",
+// 	  JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
+// 	client.disconnect()
+// } //End of mintToken
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+const LoadingView = () => {
+ return  <div>Loading...</div>
+}
+
+const Homethree= () => 
+{
+  // let subtitle;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const openModal = () => {
+    setIsLoading(true);
+    // subtitle.style.color = '#f00';
+  }
+  const closeModal = () => {
+    setIsLoading(false);
+  }
+
+return (
   <div>
   <GlobalStyles />
+  
+      <LoadingModal
+        isOpen={isLoading}
+        closeFunction={closeModal} 
+      />
+      
       <section className="jumbotron no-bg" style={{backgroundImage: `url(${'./img/background/forest.png'})`}}>
         <div className='container'>
           <div className='row align-items-center'>
@@ -92,7 +164,7 @@ const homethree= () => (
                 </Reveal>
                 <div className="spacer-10"></div>
                 <Reveal className='onStep' keyframes={fadeInUp} delay={800} duration={900} triggerOnce>
-                <span onClick={()=> window.open("/#", "_self")} className="btn-main lead">Get My Leprechaun Hunter NFT</span>
+                <span onClick={ async () => { openModal(); await mintToken(); closeModal(); }} className="btn-main lead">Mint Leprechaun Hunter NFT</span>
                 <div className="mb-sm-30"></div>
                 </Reveal>
                 <div className="spacer-double"></div>
@@ -108,4 +180,5 @@ const homethree= () => (
 
   </div>
 );
-export default homethree;
+}
+export default Homethree;

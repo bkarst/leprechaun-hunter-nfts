@@ -30,7 +30,7 @@ import Accordion from './pages/accordion';
 import Alerts from './pages/alerts';
 import Progressbar from './pages/progressbar';
 import Tabs from './pages/tabs';
-
+import {Helmet} from "react-helmet";
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
@@ -60,6 +60,9 @@ const PosedRouter = ({ children }) => (
 
 const app= () => (
   <div className="wraper">
+  <Helmet>
+    <script src="https://unpkg.com/xrpl@2.1.0-beta.1"></script>
+  </Helmet>
   <GlobalStyles />
     <Header/>
       <PosedRouter>
