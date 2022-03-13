@@ -88,7 +88,7 @@ return (
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div className='container'>
+        <div className='container' style={{padding: 30, borderRadius: 26}}>
             <p className='lead'>
                 Please wait. Your Hunter is being minted...
             </p>

@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import SliderCarousel from '../components/SliderCarouselsingle';
 import FeatureBox from '../components/FeatureBox';
 import CarouselCollection from '../components/CarouselCollection';
 import LoadingModal from '../components/LoadingModal';
-import ColumnNew from '../components/ColumnNew';
+import MyNFTs from '../components/MyNFTs';
 import AuthorList from '../components/authorList';
 import Footer from '../components/footer';
 import { createGlobalStyle } from 'styled-components';
 import Reveal from 'react-awesome-reveal';
 import { keyframes } from "@emotion/react";
 import { getTokens, mintToken } from "../lib/NftHelper";
+import { createFungibleToken } from "../lib/CurrencyHelper";
+
 import Modal from 'react-modal';
+import XrpNFT from '../lib/XrpNft';
 
 const fadeInUp = keyframes`
   0% {
@@ -119,6 +122,8 @@ const customStyles = {
   },
 };
 
+
+
 const LoadingView = () => {
  return  <div>Loading...</div>
 }
@@ -127,6 +132,16 @@ const Homethree= () =>
 {
   // let subtitle;
   const [isLoading, setIsLoading] = useState(false);
+  const [nfts, setNfts] = useState([]);
+  
+  useEffect(() => {
+    getTokens().then(tokens => {
+      if (tokens.result) {
+        const xrpTokens = tokens.result.account_nfts.map(token => new XrpNFT(token))
+        setNfts(xrpTokens)
+      }
+    })
+  }, []);
 
   const openModal = () => {
     setIsLoading(true);
@@ -155,7 +170,7 @@ return (
                 </Reveal>
                 <div className="spacer-10"></div>
                 <Reveal className='onStep' keyframes={fadeInUp} delay={300} duration={600} triggerOnce>
-                <h2 className="">Leprechauns chase rainbows. You collect their gold.</h2>
+                <h2 className="">Collect the leprechaun's gold. Mint your Leprechaun Hunter NFT. </h2>
                 </Reveal>
                 <Reveal className='onStep' keyframes={fadeInUp} delay={600} duration={600} triggerOnce>
                 <p className=" lead">
@@ -175,6 +190,22 @@ return (
           </div>
         </div>
       </section>
+      <section className="jumbotron no-bg" >
+        <div className='container'>
+          <div className='row align-items-center'>
+            <div style={{height: 600, overflow: 'scroll'}} >
+              <MyNFTs nfts={nfts} />
+            </div>
+              
+            <div onClick={createFungibleToken}>
+              Create Gold
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      
 
     <Footer />
 

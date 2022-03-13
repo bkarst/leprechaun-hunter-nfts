@@ -2,7 +2,7 @@ import React from 'react';
 import SliderCarousel from '../components/SliderCarousel';
 import FeatureBox from '../components/FeatureBox';
 import CarouselCollection from '../components/CarouselCollection';
-import ColumnNew from '../components/ColumnNew';
+import MyNFTs from '../components/MyNFTs';
 import AuthorList from '../components/authorList';
 import Footer from '../components/footer';
 import { createGlobalStyle } from 'styled-components';
@@ -67,7 +67,7 @@ const homethree= () => (
               <h2 className='style-2'>New Items</h2>
           </div>
         </div>
-       <ColumnNew/>
+       <MyNFTs/>
       </section>
 
       <section className='container no-top'>

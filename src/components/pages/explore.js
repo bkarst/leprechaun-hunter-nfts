@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select'
-import ColumnNew from '../components/ColumnNew';
+import MyNFTs from '../components/MyNFTs';
 import Footer from '../components/footer';
 
 
@@ -80,7 +80,7 @@ const explore= () => (
             </div>
           </div>
         </div>
-       <ColumnNew/>
+       <MyNFTs/>
       </section>
 
 

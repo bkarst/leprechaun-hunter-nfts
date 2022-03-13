@@ -1,15 +1,13 @@
+import { TEST_USER_SECRET, CLIENT_URL, TOKEN_URL } from '../lib/constants'
+
 const xrpl = window.xrpl;
 
-const SECRET = 'snDQdKJ87mPVhHSUQ9SnNX5QzFmpm'
-const ADDRESS = 'rfBmSoCCU6wRFuBhdA7m7ErDCk2V5cdxpt'
-const SEQUENCE = '321102'
-const TOKEN_URL = 'token_url'
 //***************************
 //** Mint Token *************
 //***************************
 
 export async function mintToken() {
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -38,6 +36,7 @@ export async function mintToken() {
 	console.log("Balance changes:",
 	  JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
 	client.disconnect()
+    return nfts;
 } //End of mintToken
 
 //***************************
@@ -45,7 +44,7 @@ export async function mintToken() {
 //***************************
 
 export async function getTokens() {
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -55,6 +54,7 @@ export async function getTokens() {
 	})
 	console.log(nfts)
 	client.disconnect()
+    return nfts;
 } //End of getTokens
 
 //***************************
@@ -62,7 +62,7 @@ export async function getTokens() {
 //***************************
 
 async function burnToken(tokenId) {
-  const wallet = xrpl.Wallet.fromSeed(SECRET)
+  const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
   const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
   await client.connect()
   console.log("Connected to Sandbox")
@@ -94,7 +94,7 @@ async function burnToken(tokenId) {
 //********************************
 
 export async function createSellOffer(tokenId, amount) {
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -149,7 +149,7 @@ export async function createSellOffer(tokenId, amount) {
 
 export async function createBuyOffer(tokenId, amount, owner) {
 
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -205,7 +205,7 @@ export async function createBuyOffer(tokenId, amount, owner) {
 
 export async function cancelOffer(tokenId, tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -262,7 +262,7 @@ export async function cancelOffer(tokenId, tokenOfferIndex) {
 
 export async function getOffers(tokenId) {
 
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -296,7 +296,7 @@ export async function getOffers(tokenId) {
 
 async function acceptSellOffer(tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -329,8 +329,8 @@ async function acceptSellOffer(tokenOfferIndex) {
 
 export async function acceptBuyOffer(tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(SECRET)
-	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
+	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const client = new xrpl.Client(CLIENT_URL)
 	await client.connect()
 	console.log("Connected to Sandbox")
 
