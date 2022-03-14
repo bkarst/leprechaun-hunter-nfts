@@ -47,7 +47,7 @@ export default class NFTCard extends Component {
         claimButton = <span onClick={this.openModal}>Collect</span>
     }
     console.log('cardnft', nft)
-
+    const claimableRewards = nft.current_period_rewards + nft.rewards_due;
 
   return (
             <div key={index} className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4">
@@ -55,6 +55,7 @@ export default class NFTCard extends Component {
                     isOpen={this.state.isOpen}
                     closeFunction={this.closeModal} 
                     nft={nft}
+                    claimableRewards={claimableRewards}
                 />
                 <div className="nft__item m-0">
                     { nft.deadline && !claimable && 
@@ -75,9 +76,13 @@ export default class NFTCard extends Component {
                         </span>
                     </div>
                     <div className="nft__item_info">
-                        <span onClick={()=> window.open(nft.nftLink, "_self")}>
+                        <span >
                             <h4>{nft.title}</h4>
                         </span>
+                        <span >
+                            <div>Rewards: {claimableRewards}</div>
+                        </span>
+                        
                         
                         <div className="nft__item_action">
                             {claimButton}

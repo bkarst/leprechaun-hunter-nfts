@@ -5,6 +5,7 @@ class XrpNFT {
 
     constructor(source, data){
         if (source == 'server') {
+            console.log('data', data)
             this.fromServer(data)
         }
         else if (source == 'xrpl'){ 
@@ -21,11 +22,11 @@ class XrpNFT {
         this.bid = "1/20"
         this.likes = 50
         // console.log(data)
-
     }
 
-    fromServer ({nft_id, uri, nft_type, current_period_rewards, rewards_due, total_rewarded, owner_public_address, claimable_on}) {
+    fromServer ({ nft_id, uri, nft_type, current_period_rewards, rewards_due, total_rewarded, owner_public_address, claimable_on}) {
 
+        this.nft_id = nft_id
         this.nft_id = nft_id
         this.uri = uri
         this.nft_id = nft_id

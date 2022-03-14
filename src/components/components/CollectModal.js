@@ -66,7 +66,7 @@ const customStyles = {
   }
 };
 
-const CollectModal= ({isOpen, closeFunction, nft}) => 
+const CollectModal= ({isOpen, closeFunction, nft, claimableRewards}) => 
 {
   let subtitle;
   const collectRewardsPending = useSelector(appState => appState.mainReducer.collectRewardsPending)
@@ -74,14 +74,31 @@ const CollectModal= ({isOpen, closeFunction, nft}) =>
         <div onClick={ () => {
             store.dispatch(collectNftRewards(nft.uri, 'taxes'));
             
-            }} >
-            Collect Taxes
+            }} style={{alignItems: 'center', cursor: 'pointer', paddingLeft: 20, paddingRight: 20, height: 60, background: 'rgba(100,100,100,0.5)', borderRadius: 100, margin: 20, marginRight: 30, display: 'flex', flexDirection: 'row'}}>
+            
+            <img src={"./img/coin.PNG"} style={{width: 30, height: 30}}/>
+                
+            <div style={{margin: 4, marginLeft: 20, color: '#fff'}} >
+                Collect Taxes ( +{claimableRewards} )
+            </div>
+            
         </div>
-        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'letgo')) } >
-            Let go
+        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'letgo')) } style={{alignItems: 'center', cursor: 'pointer', paddingLeft: 20, paddingRight: 20, height: 60, background: 'rgba(100,100,100,0.5)', borderRadius: 100, margin: 20, marginRight: 30, display: 'flex', flexDirection: 'row'}}>
+            <img src={"./img/emerald.PNG"} style={{width: 30, height: 30}}/>
+                
+            <div style={{margin: 4, marginLeft: 20, color: '#fff'}} >
+              Let go and defer Taxes (+10 bonus next claim)
+            </div>
+            
         </div>
-        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'takegold')) } >
-            Take Gold
+        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'takegold')) }  style={{alignItems: 'center', cursor: 'pointer', paddingLeft: 20, paddingRight: 20, height: 60, background: 'rgba(100,100,100,0.5)', borderRadius: 100, margin: 20, marginRight: 30, display: 'flex', flexDirection: 'row'}}>
+            
+            <img src={"./img/common_chest.PNG"} style={{width: 30, height: 30}}/>
+                
+            <div style={{margin: 4, marginLeft: 20, color: '#fff'}} >
+              Take {claimableRewards * 10} Gold (%10 chance of success)
+            </div>
+            
         </div>
         </div>
     if (collectRewardsPending) {
@@ -111,10 +128,17 @@ return (
       <GlobalStyles />
       <Modal
         isOpen={isOpen}
+        onRequestClose={closeFunction}
         style={customStyles}
         contentLabel="Example Modal"
       >
-        {rewardCollectDiv}
+        <div>
+        <div style={{alignItems: 'center', paddingLeft: 20, paddingRight: 20, height: 60, borderRadius: 100, margin: 20, marginRight: 30, display: 'flex', flexDirection: 'row'}}>
+          <img className="lazy" style={{width:100}} src="./img/23.png" alt=""/>
+          <div>Choose Your Action</div>
+        </div>
+          {rewardCollectDiv}
+        </div>
       </Modal>
   </div>
 );
