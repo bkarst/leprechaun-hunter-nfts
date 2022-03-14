@@ -15,7 +15,7 @@ class XrpNFT {
         this.authorLink = "ItemDetail"
         this.nftLink = "ItemDetail"
         this.bidLink = "ItemDetail"
-        this.authorImg = "./img/23.png"
+        this.authorImg = "./img/23.PNG"
         this.previewImg = "./img/warrior.png"
         this.title = "Leprechaun Hunter "
         this.price = "0.08 ETH"

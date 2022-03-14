@@ -134,7 +134,7 @@ return (
       >
         <div>
         <div style={{alignItems: 'center', paddingLeft: 20, paddingRight: 20, height: 60, borderRadius: 100, margin: 20, marginRight: 30, display: 'flex', flexDirection: 'row'}}>
-          <img className="lazy" style={{width:100}} src="./img/23.png" alt=""/>
+          <img className="lazy" style={{width:100}} src="./img/23.PNG" alt=""/>
           <div>Choose Your Action</div>
         </div>
           {rewardCollectDiv}
