@@ -4,7 +4,7 @@ import { header } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import useOnclickOutside from "react-cool-onclickoutside";
 import BalanceHeader from "../components/BalanceHeader"
-
+import TestKeyModal from "../components/TestKeyModal"
 setDefaultBreakpoints([
   { xs: 0 },
   { l: 1199 },
@@ -32,6 +32,15 @@ const Header= function() {
     const [openMenu1, setOpenMenu1] = React.useState(false);
     const [openMenu2, setOpenMenu2] = React.useState(false);
     const [openMenu3, setOpenMenu3] = React.useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
+    const openModal = () => {
+      setIsConnecting(true);
+      // subtitle.style.color = '#f00';
+    }
+    const closeModal = () => {
+      console.log("closing")
+      setIsConnecting(false);
+    }
     const handleBtnClick = (): void => {
       setOpenMenu(!openMenu);
     };
@@ -94,6 +103,11 @@ const Header= function() {
     return (
     <header id="myHeader" className='navbar white'>
      <div className='container'>
+     <TestKeyModal
+        isOpen={isConnecting}
+        closeFunction={closeModal} 
+        onRequestClose={closeModal}
+      />
        <div className='row w-100-nav'>
           <div className='logo px-0'>
               <div className='navbar-title navbar-item'>
@@ -181,7 +195,7 @@ const Header= function() {
                 <BalanceHeader />
               </div>
               <div className='mainside'>
-                <NavLink to="/wallet" className="btn-main">Connect Wallet</NavLink>
+                <div className="btn-main" onClick={openModal}>Connect Wallet</div>
               </div>
                   
       </div>

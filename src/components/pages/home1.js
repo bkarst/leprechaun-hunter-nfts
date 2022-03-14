@@ -12,7 +12,8 @@ import Reveal from 'react-awesome-reveal';
 import { keyframes } from "@emotion/react";
 import { getTokens, getBackendTokens, mintToken } from "../lib/NftHelper";
 import { createFungibleToken, sendToken, getBalance } from "../lib/CurrencyHelper";
-import { TEST_USER_ADDRESS, TEST_USER_SECRET } from "../lib/constants"
+import { TEST_USER_ADDRESS, TEST_USER_SECRET, getConstants } from "../lib/constants"
+import * as ls from "local-storage";
 import Modal from 'react-modal';
 import XrpNFT from '../lib/XrpNft';
 import { useSelector, useDispatch } from 'react-redux'
@@ -132,6 +133,8 @@ const LoadingView = () => {
 
 const Homethree= () => 
 {
+  const key = ls.get("private_test_key")
+  console.log("key", key);
   // let subtitle;
   const [isLoading, setIsLoading] = useState(false);
   const [nfts, setNfts] = useState([]);
@@ -155,7 +158,7 @@ const Homethree= () =>
         setNfts(xrpTokens)
       }
     })
-    store.dispatch(getBalance(TEST_USER_ADDRESS));
+    store.dispatch(getBalance(getConstants().TEST_USER_ADDRESS));
     // checkBalance(TEST_USER_ADDRESS).then(balance => setBalance(balance))
   }, []);
   console.log('balance', balance);
@@ -212,14 +215,6 @@ return (
             <div style={{height: 600, overflow: 'scroll'}} >
               <MyNFTs nfts={nfts} />
             </div>
-              
-            <div onClick={createFungibleToken}>
-              Create Gold
-            </div>
-            <div onClick={() => sendToken(TEST_USER_SECRET, 9000)}>
-              Send Token
-            </div>
-
           </div>
         </div>
       </section>

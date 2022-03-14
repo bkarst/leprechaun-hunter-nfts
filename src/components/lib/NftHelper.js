@@ -1,6 +1,6 @@
 import { COLD_SECRET, CURRENCY_CODE, 
     TEST_USER_SECRET, CLIENT_URL, 
-    TOKEN_URL, BASE_API_URL, TEST_USER_ADDRESS } from '../lib/constants'
+    TOKEN_URL, BASE_API_URL, TEST_USER_ADDRESS, getConstants } from '../lib/constants'
 import { sendToken } from './CurrencyHelper';
 import axios from 'axios';
 import { createAsyncAction } from 'redux-promise-middleware-actions';
@@ -29,10 +29,10 @@ const collectNftRewardsVariable = async (uri, collectType) => {
   await axios({
     method: 'post',
     url: BASE_API_URL + 'api/collect',
-    data: { uri: uri, owner_public_address: TEST_USER_ADDRESS, collect_type: collectType}
+    data: { uri: uri, owner_public_address: getConstants().TEST_USER_ADDRESS, collect_type: collectType}
   }).then(async result => {
     if (result.data.rewarded){
-      await sendToken(TEST_USER_SECRET, result.data.rewarded);
+      await sendToken(getConstants().TEST_USER_SECRET, result.data.rewarded);
     }
     // console.log('collectresult', result)
 }).catch(function (error) {
@@ -47,7 +47,7 @@ export const collectNftRewards = createAsyncAction('COLLECT_REWARDS', (uri, coll
 });
 
 export async function mintToken() {
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -70,7 +70,7 @@ export async function mintToken() {
   axios({
     method: 'post',
     url: BASE_API_URL + 'api/nft',
-    data: { uri: uri, owner_public_address: TEST_USER_ADDRESS }
+    data: { uri: uri, owner_public_address: getConstants().TEST_USER_ADDRESS }
   }).catch(function (error) {
     console.log(error);
   });;
@@ -91,7 +91,7 @@ export async function mintToken() {
 
 	// Check transaction results -------------------------------------------------
 	console.log("Transaction result:", tx.result.meta.TransactionResult)
-  await sendToken(TEST_USER_SECRET, 0)
+  await sendToken(getConstants().TEST_USER_SECRET, 0)
 	console.log("Balance changes:",
 	  JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
 	client.disconnect()
@@ -104,14 +104,14 @@ export async function mintToken() {
 
 
 export async function getBackendTokens(){
-  const tokens = await axios.get(BASE_API_URL + "api/nfts?owner_public_address=" + TEST_USER_ADDRESS)
+  const tokens = await axios.get(BASE_API_URL + "api/nfts?owner_public_address=" + getConstants().TEST_USER_ADDRESS)
   // console.log('tokens', tokens)
   return tokens
 }
 
 
 export async function getTokens() {
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -129,7 +129,7 @@ export async function getTokens() {
 //***************************
 
 async function burnToken(tokenId) {
-  const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+  const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
   const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
   await client.connect()
   console.log("Connected to Sandbox")
@@ -161,7 +161,7 @@ async function burnToken(tokenId) {
 //********************************
 
 export async function createSellOffer(tokenId, amount) {
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -216,7 +216,7 @@ export async function createSellOffer(tokenId, amount) {
 
 export async function createBuyOffer(tokenId, amount, owner) {
 
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -272,7 +272,7 @@ export async function createBuyOffer(tokenId, amount, owner) {
 
 export async function cancelOffer(tokenId, tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -329,7 +329,7 @@ export async function cancelOffer(tokenId, tokenOfferIndex) {
 
 export async function getOffers(tokenId) {
 
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -363,7 +363,7 @@ export async function getOffers(tokenId) {
 
 async function acceptSellOffer(tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
@@ -396,7 +396,7 @@ async function acceptSellOffer(tokenOfferIndex) {
 
 export async function acceptBuyOffer(tokenOfferIndex) {
 
-	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
+	const wallet = xrpl.Wallet.fromSeed(getConstants().TEST_USER_SECRET)
 	const client = new xrpl.Client(CLIENT_URL)
 	await client.connect()
 	console.log("Connected to Sandbox")
