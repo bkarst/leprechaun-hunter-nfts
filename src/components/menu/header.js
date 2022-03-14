@@ -148,11 +148,7 @@ const Header= function() {
                         )}
                       </div>
                     </div>
-                    <div className='navbar-item'>
-                      <NavLink to="/activity" onClick={() => btn_icon(!showmenu)}>
-                        Activity
-                      </NavLink>
-                    </div>
+                    
                     <div className='navbar-item'>
                       <div ref={ref3}>
                         <div className="dropdown-custom dropdown-toggle btn" 
@@ -182,12 +178,7 @@ const Header= function() {
 
                 <Breakpoint xl>
                   <div className='menu'>
-                    <div className='navbar-item'>
-                      <NavLink to="/activity">
-                      Activity
-                      <span className='lines'></span>
-                      </NavLink>
-                    </div>
+                    
                   </div>
                 </Breakpoint>
               </BreakpointProvider>

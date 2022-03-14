@@ -198,7 +198,7 @@ return (
                 </Reveal>
                 <div className="spacer-10"></div>
                 <Reveal className='onStep' keyframes={fadeInUp} delay={800} duration={900} triggerOnce>
-                <span onClick={ async () => { openModal(); await mintToken(); closeModal(); }} className="btn-main lead">Mint Leprechaun Hunter NFT</span>
+                <span onClick={ async () => { openModal(); await mintToken(); window.location = '/'; }} className="btn-main lead">Mint Leprechaun Hunter NFT</span>
                 <div className="mb-sm-30"></div>
                 </Reveal>
                 <div className="spacer-double"></div>
