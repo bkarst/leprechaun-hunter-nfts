@@ -3,7 +3,7 @@ import Breakpoint, { BreakpointProvider, setDefaultBreakpoints } from "react-soc
 import { header } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import useOnclickOutside from "react-cool-onclickoutside";
-
+import BalanceHeader from "../components/BalanceHeader"
 
 setDefaultBreakpoints([
   { xs: 0 },
@@ -177,7 +177,9 @@ const Header= function() {
                   </div>
                 </Breakpoint>
               </BreakpointProvider>
-
+              <div className='mainside'>
+                <BalanceHeader />
+              </div>
               <div className='mainside'>
                 <NavLink to="/wallet" className="btn-main">Connect Wallet</NavLink>
               </div>

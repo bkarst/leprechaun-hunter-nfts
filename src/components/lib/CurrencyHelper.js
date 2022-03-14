@@ -1,8 +1,11 @@
+import { createAsyncAction } from 'redux-promise-middleware-actions';
+
 import { HOT_SECRET, COLD_SECRET, 
     TEST_USER_SECRET, 
     CLIENT_URL, 
     CURRENCY_CODE, 
     TOKEN_URL } from '../lib/constants'
+    
 const xrpl = window.xrpl;
 
 // Stand-alone code sample for the "issue a token" tutorial:
@@ -143,17 +146,44 @@ const xrpl = window.xrpl;
     client.disconnect()
   } // End of main()
   
-  export async function sendToken(publicAddress, quantity ) {
+  export async function sendToken(userSecret, quantity ) {
+    const recipientWallet = xrpl.Wallet.fromSeed(userSecret)
     const client = new xrpl.Client(CLIENT_URL)
     console.log("Connecting to nft-devnet...")
     await client.connect()
   
+
+
     // Get credentials from the Testnet Faucet -----------------------------------
     console.log("Requesting addresses from the nft-devnet faucet...")
-    const hot_wallet = xrpl.Wallet.fromSeed(HOT_SECRET)
-    // const hot_wallet = (await client.fundWallet()).wallet
+
     const cold_wallet = xrpl.Wallet.fromSeed(COLD_SECRET)
 
+
+    const trust_set_tx = {
+        "TransactionType": "TrustSet",
+        "Account": recipientWallet.address,
+        "LimitAmount": {
+          "currency": CURRENCY_CODE,
+          "issuer": cold_wallet.address,
+          "value": "10000000000000" // Large limit, arbitrarily chosen
+        }
+      }
+    
+      const ts_prepared = await client.autofill(trust_set_tx)
+      const ts_signed = recipientWallet.sign(ts_prepared)
+      console.log("Creating trust line from hot address to issuer...")
+      const ts_result = await client.submitAndWait(ts_signed.tx_blob)
+      if (ts_result.result.meta.TransactionResult == "tesSUCCESS") {
+        console.log(`Trustset hot: https://nft-devnet.xrpl.org/transactions/${ts_signed.hash}`)
+      } else {
+        throw `Error sending transaction: ${ts_result.result.meta.TransactionResult}`
+      }
+
+    if (quantity <= 0) {
+      client.disconnect()
+      return
+    }
     const issue_quantity = quantity.toString()
     const send_token_tx = {
       "TransactionType": "Payment",
@@ -163,22 +193,23 @@ const xrpl = window.xrpl;
         "value": issue_quantity,
         "issuer": cold_wallet.address
       },
-      "Destination": publicAddress,
+      "Destination": recipientWallet.address,
     }
   
     const pay_prepared = await client.autofill(send_token_tx)
     const pay_signed = cold_wallet.sign(pay_prepared)
-    console.log(`Sending ${issue_quantity} ${CURRENCY_CODE} to ${hot_wallet.address}...`)
+    console.log(`Sending ${issue_quantity} ${CURRENCY_CODE} to ${recipientWallet.address}...`)
     const pay_result = await client.submitAndWait(pay_signed.tx_blob)
     if (pay_result.result.meta.TransactionResult == "tesSUCCESS") {
       console.log(`Transaction succeeded: https://nft-devnet.xrpl.org/transactions/${pay_signed.hash}`)
     } else {
-      throw `Error sending transaction: ${pay_result.result.meta.TransactionResult}`
+        console.log(pay_result)
+    //   throw `Error sending transaction: ${pay_result.result.meta.TransactionResult}`
     }
     client.disconnect()
   }
 
-  export async function checkBalance(publicAddress){
+const checkBalance = async (publicAddress) => {
     const client = new xrpl.Client(CLIENT_URL)
     console.log("Connecting to nft-devnet...")
     await client.connect()
@@ -205,4 +236,19 @@ const xrpl = window.xrpl;
     })
     console.log(JSON.stringify(cold_balances.result, null, 2))
     client.disconnect()
-  }
+    const gldBalance = hot_balances.result.lines.filter(line => line.currency == 'GLD')
+    console.log('gldBalance', gldBalance)
+    
+    if (gldBalance.length > 0) {
+        return gldBalance[0].balance
+    }
+    else {
+        return 0
+    }
+}
+
+export const getBalance = createAsyncAction('GET_BALANCE', (publicAddress) => {
+  return checkBalance(publicAddress).then(result => {
+    return result 
+  })
+});

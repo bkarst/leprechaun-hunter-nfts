@@ -1,29 +1,72 @@
-import { TEST_USER_SECRET, CLIENT_URL, TOKEN_URL } from '../lib/constants'
-
+import { COLD_SECRET, CURRENCY_CODE, 
+    TEST_USER_SECRET, CLIENT_URL, 
+    TOKEN_URL, BASE_API_URL, TEST_USER_ADDRESS } from '../lib/constants'
+import { sendToken } from './CurrencyHelper';
+import axios from 'axios';
 const xrpl = window.xrpl;
 
 //***************************
 //** Mint Token *************
 //***************************
 
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+charactersLength));
+ }
+ return result;
+}
+
+
+export async function collectNftRewards(uri, collectType){
+  axios({
+    method: 'post',
+    url: BASE_API_URL + 'api/collect',
+    data: { uri: uri, owner_public_address: TEST_USER_ADDRESS, collect_type: collectType}
+  }).catch(function (error) {
+    console.log(error);
+  });;
+}
+
 export async function mintToken() {
 	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)
 	const client = new xrpl.Client("wss://xls20-sandbox.rippletest.net:51233")
 	await client.connect()
 	console.log("Connected to Sandbox")
-
+  
 	// Note that you must convert the token URL to a hexadecimal
 	// value for this transaction.
 	// ----------------------------------------------------------
+  const uri = xrpl.convertStringToHex(TOKEN_URL + makeid(15));
 	const transactionBlob = {
 		TransactionType: "NFTokenMint",
 		Account: wallet.classicAddress,
-		URI: xrpl.convertStringToHex(TOKEN_URL),
+		URI: uri,
 		Flags: 8,
 		TokenTaxon: 0 //Required, but if you have no use for it, set to zero.
 	}
 	// Submit signed blob --------------------------------------------------------
 	const tx = await client.submitAndWait(transactionBlob,{wallet})
+
+  console.log('minted nft', tx);
+  axios({
+    method: 'post',
+    url: BASE_API_URL + 'api/nft',
+    data: { uri: uri, owner_public_address: TEST_USER_ADDRESS }
+  }).catch(function (error) {
+    console.log(error);
+  });;
+  
+  // axios.post(, )
+  // .then(function (response) {
+  //   console.log(response);
+  // })
+  
+
+
 
 	const nfts = await client.request({
 		method: "account_nfts",
@@ -33,6 +76,7 @@ export async function mintToken() {
 
 	// Check transaction results -------------------------------------------------
 	console.log("Transaction result:", tx.result.meta.TransactionResult)
+  await sendToken(TEST_USER_SECRET, 0)
 	console.log("Balance changes:",
 	  JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
 	client.disconnect()
@@ -42,6 +86,14 @@ export async function mintToken() {
 //***************************
 //** Get Tokens *************
 //***************************
+
+
+export async function getBackendTokens(){
+  const tokens = await axios.get(BASE_API_URL + "api/nfts?owner_public_address=" + TEST_USER_ADDRESS)
+  // console.log('tokens', tokens)
+  return tokens
+}
+
 
 export async function getTokens() {
 	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)

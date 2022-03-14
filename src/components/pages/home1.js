@@ -6,14 +6,16 @@ import LoadingModal from '../components/LoadingModal';
 import MyNFTs from '../components/MyNFTs';
 import AuthorList from '../components/authorList';
 import Footer from '../components/footer';
+import store from '../../store';
 import { createGlobalStyle } from 'styled-components';
 import Reveal from 'react-awesome-reveal';
 import { keyframes } from "@emotion/react";
-import { getTokens, mintToken } from "../lib/NftHelper";
-import { createFungibleToken } from "../lib/CurrencyHelper";
-
+import { getTokens, getBackendTokens, mintToken } from "../lib/NftHelper";
+import { createFungibleToken, sendToken, getBalance } from "../lib/CurrencyHelper";
+import { TEST_USER_ADDRESS, TEST_USER_SECRET } from "../lib/constants"
 import Modal from 'react-modal';
 import XrpNFT from '../lib/XrpNft';
+import { useSelector, useDispatch } from 'react-redux'
 
 const fadeInUp = keyframes`
   0% {
@@ -133,16 +135,30 @@ const Homethree= () =>
   // let subtitle;
   const [isLoading, setIsLoading] = useState(false);
   const [nfts, setNfts] = useState([]);
+  // const [balance, setBalance] = useState([]);
+  const balance = useSelector(appState => appState.mainReducer.balance)
   
   useEffect(() => {
-    getTokens().then(tokens => {
-      if (tokens.result) {
-        const xrpTokens = tokens.result.account_nfts.map(token => new XrpNFT(token))
+    // getTokens().then(tokens => {
+    //   if (tokens.result) {
+    //     let xrpTokens = tokens.result.account_nfts.map(token => new XrpNFT(token))
+    //     xrpTokens = xrpTokens.map(async nft => await nft.syncBackendData())
+    //     console.log('xrpTokens', xrpTokens)
+    //     xrpTokens = xrpTokens.filter(nft => nft.hidden != true)
+    //     setNfts(xrpTokens)
+    //   }
+    // })
+    getBackendTokens().then(tokens => {
+      console.log('tokens', tokens.data.nfts)
+      if (tokens.data) {
+        const xrpTokens = tokens.data.nfts.map(token => new XrpNFT('server', token))
         setNfts(xrpTokens)
       }
     })
+    store.dispatch(getBalance(TEST_USER_ADDRESS));
+    // checkBalance(TEST_USER_ADDRESS).then(balance => setBalance(balance))
   }, []);
-
+  console.log('balance', balance);
   const openModal = () => {
     setIsLoading(true);
     // subtitle.style.color = '#f00';
@@ -200,13 +216,13 @@ return (
             <div onClick={createFungibleToken}>
               Create Gold
             </div>
+            <div onClick={() => sendToken(TEST_USER_SECRET, 9000)}>
+              Send Token
+            </div>
+
           </div>
         </div>
       </section>
-
-
-      
-
     <Footer />
 
   </div>
