@@ -110,7 +110,11 @@ return (
         <div className='container' style={{padding: 30, borderRadius: 26}}>
             <form onSubmit={formSubmit} >
                 <p className='lead'>
-                    Enter NFT DevNet Private Key
+                    Enter NFT DevNet Secret
+                </p>
+
+                <p>
+                  Generate NFT Devnet Credentials <a target="_blank" href="https://xrpl.org/xrp-testnet-faucet.html">here</a>
                 </p>
                 <input id="privateKey" className='key' />
                 <input type="submit" className='lead' />
