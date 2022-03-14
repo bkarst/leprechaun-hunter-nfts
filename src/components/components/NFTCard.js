@@ -13,6 +13,7 @@ export default class NFTCard extends Component {
     };
     this.onImgLoad = this.onImgLoad.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     }
 
     onImgLoad({target:img}) {
@@ -77,9 +78,7 @@ export default class NFTCard extends Component {
                         <span onClick={()=> window.open(nft.nftLink, "_self")}>
                             <h4>{nft.title}</h4>
                         </span>
-                        <div className="nft__item_price">
-                            {nft.price}<span>{nft.bid}</span>
-                        </div>
+                        
                         <div className="nft__item_action">
                             {claimButton}
                         </div>

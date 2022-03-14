@@ -3,6 +3,7 @@ import { COLD_SECRET, CURRENCY_CODE,
     TOKEN_URL, BASE_API_URL, TEST_USER_ADDRESS } from '../lib/constants'
 import { sendToken } from './CurrencyHelper';
 import axios from 'axios';
+import { createAsyncAction } from 'redux-promise-middleware-actions';
 const xrpl = window.xrpl;
 
 //***************************
@@ -21,15 +22,29 @@ charactersLength));
 }
 
 
-export async function collectNftRewards(uri, collectType){
-  axios({
+
+
+// export async function collectNftRewardsVariable(uri, collectType){
+const collectNftRewardsVariable = async (uri, collectType) => {
+  await axios({
     method: 'post',
     url: BASE_API_URL + 'api/collect',
     data: { uri: uri, owner_public_address: TEST_USER_ADDRESS, collect_type: collectType}
-  }).catch(function (error) {
+  }).then(async result => {
+    if (result.data.rewarded){
+      await sendToken(TEST_USER_SECRET, result.data.rewarded);
+    }
+    // console.log('collectresult', result)
+}).catch(function (error) {
     console.log(error);
   });;
 }
+
+export const collectNftRewards = createAsyncAction('COLLECT_REWARDS', (uri, collectType) => {
+  return collectNftRewardsVariable(uri, collectType).then(result => {
+    return result
+  })
+});
 
 export async function mintToken() {
 	const wallet = xrpl.Wallet.fromSeed(TEST_USER_SECRET)

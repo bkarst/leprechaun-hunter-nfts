@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Modal from 'react-modal';
 import { collectNftRewards } from "../lib/NftHelper"
+import store from '../../store';
+import { useSelector, useDispatch } from 'react-redux'
 Modal.defaultStyles.overlay.backgroundColor = 'rgba(0,0,0, 0.5)';
 
 const GlobalStyles = createGlobalStyle`
@@ -67,6 +69,28 @@ const customStyles = {
 const CollectModal= ({isOpen, closeFunction, nft}) => 
 {
   let subtitle;
+  const collectRewardsPending = useSelector(appState => appState.mainReducer.collectRewardsPending)
+  let rewardCollectDiv = <div className='container' style={{padding: 30, borderRadius: 26, zIndex: 999}}>
+        <div onClick={ () => {
+            store.dispatch(collectNftRewards(nft.uri, 'taxes'));
+            
+            }} >
+            Collect Taxes
+        </div>
+        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'letgo')) } >
+            Let go
+        </div>
+        <div onClick={() => store.dispatch(collectNftRewards(nft.uri, 'takegold')) } >
+            Take Gold
+        </div>
+        </div>
+    if (collectRewardsPending) {
+        rewardCollectDiv = <div className='container' style={{padding: 30, borderRadius: 26, zIndex: 999}}>
+            <div>
+                Collecting Rewards...
+            </div>
+        </div>
+    }
 //   const [modalIsOpen, setIsOpen] = useState(true);
 
 //   if (isOpen) {
@@ -90,17 +114,7 @@ return (
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div className='container' style={{padding: 30, borderRadius: 26, zIndex: 999}}>
-            <div onClick={() => collectNftRewards(nft.uri, 'taxes')} >
-                Collect Taxes
-            </div>
-            <div onClick={() => collectNftRewards(nft.uri, 'letgo')} >
-                Let go
-            </div>
-            <div onClick={() => collectNftRewards(nft.uri, 'takegold')} >
-                Take Gold
-            </div>
-        </div>
+        {rewardCollectDiv}
       </Modal>
   </div>
 );

@@ -160,25 +160,25 @@ const xrpl = window.xrpl;
     const cold_wallet = xrpl.Wallet.fromSeed(COLD_SECRET)
 
 
-    const trust_set_tx = {
-        "TransactionType": "TrustSet",
-        "Account": recipientWallet.address,
-        "LimitAmount": {
-          "currency": CURRENCY_CODE,
-          "issuer": cold_wallet.address,
-          "value": "10000000000000" // Large limit, arbitrarily chosen
-        }
-      }
+    // const trust_set_tx = {
+    //     "TransactionType": "TrustSet",
+    //     "Account": recipientWallet.address,
+    //     "LimitAmount": {
+    //       "currency": CURRENCY_CODE,
+    //       "issuer": cold_wallet.address,
+    //       "value": "10000000000000" // Large limit, arbitrarily chosen
+    //     }
+    //   }
     
-      const ts_prepared = await client.autofill(trust_set_tx)
-      const ts_signed = recipientWallet.sign(ts_prepared)
-      console.log("Creating trust line from hot address to issuer...")
-      const ts_result = await client.submitAndWait(ts_signed.tx_blob)
-      if (ts_result.result.meta.TransactionResult == "tesSUCCESS") {
-        console.log(`Trustset hot: https://nft-devnet.xrpl.org/transactions/${ts_signed.hash}`)
-      } else {
-        throw `Error sending transaction: ${ts_result.result.meta.TransactionResult}`
-      }
+    //   const ts_prepared = await client.autofill(trust_set_tx)
+    //   const ts_signed = recipientWallet.sign(ts_prepared)
+    //   console.log("Creating trust line from hot address to issuer...")
+    //   const ts_result = await client.submitAndWait(ts_signed.tx_blob)
+    //   if (ts_result.result.meta.TransactionResult == "tesSUCCESS") {
+    //     console.log(`Trustset hot: https://nft-devnet.xrpl.org/transactions/${ts_signed.hash}`)
+    //   } else {
+    //     throw `Error sending transaction: ${ts_result.result.meta.TransactionResult}`
+    //   }
 
     if (quantity <= 0) {
       client.disconnect()
